@@ -1,3 +1,10 @@
+GIT
+  remote: git://github.com/styx/timeline_fu.git
+  revision: d5476a0fc5f666fa410d232faf7a63d9280b7a05
+  specs:
+    timeline_fu (0.4.5)
+      activerecord
+
 PATH
   remote: .
   specs:
@@ -153,3 +160,4 @@ DEPENDENCIES
   pry
   rspec (~> 2.11.0)
   shoulda
+  timeline_fu!
