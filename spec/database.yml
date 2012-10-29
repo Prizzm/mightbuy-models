@@ -1,0 +1,29 @@
+development:
+  adapter: postgresql
+  encoding: unicode
+  reconnect: false
+  pool: 5
+  database: mightbuy_development
+  username:
+  password:
+
+test: &test
+  adapter: postgresql
+  encoding: unicode
+  reconnect: false
+  pool: 5
+  database: mightbuy_test
+  username:
+  password:
+
+production:
+  adapter: postgresql
+  encoding: unicode
+  reconnect: false
+  pool: 5
+  database: mightbuy_production
+  username:
+  password:
+
+cucumber:
+  <<: *test

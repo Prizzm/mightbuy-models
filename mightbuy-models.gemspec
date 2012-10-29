@@ -26,5 +26,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency('rspec', '~> 2.11.0')
   s.add_development_dependency("pry")
   s.add_development_dependency("shoulda")
+  s.add_development_dependency("database_cleaner","~> 0.9.1")
   s.add_development_dependency("factory_girl_rails", "~> 1.3.0")
 end
