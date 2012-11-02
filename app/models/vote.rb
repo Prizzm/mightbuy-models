@@ -8,16 +8,21 @@ class Vote < ActiveRecord::Base
   fires :new_vote, on: :create, actor: :user, secondary_subject: :topic
 
   def self.update_user(vote_id, user)
+    updated = false
+
     if vote_id && vote = Vote.find_by_id(vote_id)
       if existing_vote = Vote.find_by_topic_id_and_user_id(vote.topic.id, user.id)
-        existing_vote.update_attributes(buyit: vote.buyit)
         vote.destroy
+        vote = existing_vote
+        updated = vote.update_attributes(buyit: vote.buyit)
       else
-        vote.update_attributes(user_id: user.id)
+        updated = vote.update_attributes(user_id: user.id)
       end
-    else
-      false
+
+      vote.send_notifications if updated
     end
+
+    updated
   end
 
   def like_dislike_text
@@ -35,5 +40,9 @@ class Vote < ActiveRecord::Base
       end
 
     "#{actor.name} #{like_dislike_text} #{owner_link} <a href='/topics/#{topic.to_param}'>#{topic.subject.first(45)}..</a> on mightbuy.".html_safe
+  end
+
+  def send_notifications
+    Delayed::Job.enqueue( ::VotesMailerJob.new(self.id) )
   end
 end
