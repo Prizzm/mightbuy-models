@@ -279,7 +279,7 @@ class Topic < ActiveRecord::Base
     vote ||= votes.build(user: user)
 
     vote.buyit = buyit
-    vote.save && vote.send_notifications
+    vote.save
     vote
   end
 
