@@ -290,5 +290,10 @@ class Topic < ActiveRecord::Base
       nil
     end
   end
-end
 
+  def ordered_comments
+    comments.joins(:user).
+      where(parent_id: nil).order("comments.created_at ASC").
+      includes(:user)
+  end
+end
