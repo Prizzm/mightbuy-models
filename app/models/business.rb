@@ -3,9 +3,8 @@ class Business < ActiveRecord::Base
 
   has_many :business_staffs
 
-  # has_many :business_products
-  # has_many :products, :through => :business_products
-  
+  image_accessor :logo
+
   def foreground_color
     self.foreground.split(',')
   end
