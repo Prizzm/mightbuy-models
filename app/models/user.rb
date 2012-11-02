@@ -36,6 +36,7 @@ class User < ActiveRecord::Base
   has_many :antiForgeTokens
   has_many :orders
   has_many :deals, :class_name => "Deals::Deal"
+  has_many :tags, through: :topics
 
   # Validations
   validates :name, :presence => true
