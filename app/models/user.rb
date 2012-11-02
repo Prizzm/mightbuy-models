@@ -181,4 +181,8 @@ class User < ActiveRecord::Base
       super
     end
   end
+
+  def popular_tags
+    tags.popular.limit(15)
+  end
 end
