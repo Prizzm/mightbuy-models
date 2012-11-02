@@ -36,6 +36,7 @@ class User < ActiveRecord::Base
   has_many :antiForgeTokens
   has_many :orders
   has_many :deals, :class_name => "Deals::Deal"
+  has_many :tags, through: :topics, uniq: true
 
   # Validations
   validates :name, :presence => true
@@ -179,5 +180,9 @@ class User < ActiveRecord::Base
     else
       super
     end
+  end
+
+  def popular_tags
+    tags.popular.limit(15)
   end
 end
