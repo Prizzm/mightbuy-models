@@ -17,6 +17,8 @@ class Business < ActiveRecord::Base
   end
 
   def products_via_urls
-
+    business_urls.flat_map do |business_url|
+      Product.where(domain_name: business_url.fqdn)
+    end
   end
 end
