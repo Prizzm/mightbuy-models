@@ -15,4 +15,8 @@ class Business < ActiveRecord::Base
   def background_color
     self.background.split(',')
   end
+
+  def products_via_urls
+
+  end
 end
