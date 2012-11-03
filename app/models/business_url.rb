@@ -1,5 +1,5 @@
 class BusinessUrl < ActiveRecord::Base
-  attr_accessible :domain
+  attr_accessible :domain, :business
 
   belongs_to :business
 
