@@ -25,4 +25,13 @@ class Business < ActiveRecord::Base
   def all_products
     Set.new(products.to_a + products_via_urls)
   end
+
+  def customers
+    business_customers = Set.new()
+    all_products.each do |product|
+      business_customers += User.joins(:topics).where("topics.product_id = ?",product.id).all
+    end
+    business_customers
+  end
 end
+
