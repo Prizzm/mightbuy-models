@@ -2,6 +2,7 @@ class Business < ActiveRecord::Base
   has_many :products
 
   has_many :business_staffs
+  has_many :business_urls
 
   image_accessor :logo
 
