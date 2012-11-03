@@ -21,4 +21,8 @@ class Business < ActiveRecord::Base
       Product.where(domain_name: business_url.fqdn)
     end
   end
+
+  def all_products
+    Set.new(products.to_a + products_via_urls)
+  end
 end
