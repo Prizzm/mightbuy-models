@@ -3,6 +3,7 @@ class Business < ActiveRecord::Base
 
   has_many :business_staffs
   has_many :business_urls
+  has_many :customer_leads
 
   image_accessor :logo
 
