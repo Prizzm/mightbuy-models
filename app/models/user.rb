@@ -10,7 +10,6 @@ class User < ActiveRecord::Base
   include Points::Has
   include InheritUpload
   extend FriendlyId
-
   friendly_id :name, use: :slugged
 
   devise :database_authenticatable, :registerable,
@@ -162,6 +161,12 @@ class User < ActiveRecord::Base
     else
       super
     end
+  end
+
+  def company_products(business)
+    full_domains = business.business_urls.map(&:fqdn)
+    return [] if full_domains.blank?
+    Topic.joins(:product).where("products.domain_name" => full_domains, "topics.user_id" => self.id)
   end
 
   def password_required?

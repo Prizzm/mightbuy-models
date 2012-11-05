@@ -7,5 +7,9 @@ FactoryGirl.define do
     longitude "MyString"
     foreground "MyString"
     background "MyString"
+    email "business@example.com"
+    phone "+919740313399"
+    address "shire and frodo"
   end
 end
+
