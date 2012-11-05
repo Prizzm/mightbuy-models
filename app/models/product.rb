@@ -8,8 +8,7 @@ class Product < ActiveRecord::Base
   has_many :topics
   has_many :anti_forge_tokens
   after_create :find_topics
-
-  # Methods
+  before_save :update_domain_name
 
   def find_topics
     t = Topic.where("url = ?", url)
@@ -23,5 +22,14 @@ class Product < ActiveRecord::Base
       select("count(product_id) as product_count,product_id").
       limit(count).
       order("product_count desc").map(&:product)
+  end
+
+  def update_domain_name
+    self.domain_name =
+      if url =~ /^(http|https)/
+        URI.parse(url).host rescue url
+      else
+        url
+      end
   end
 end
