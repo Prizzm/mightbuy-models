@@ -2,7 +2,7 @@ class PopulateDefaultValueOfStatusInCustomerLeads < ActiveRecord::Migration
   def up
     CustomerLead.reset_column_information
     CustomerLead.all.each do |lead|
-      lead.update_attributes(status: "Not Sent") unless lead.status
+      lead.update_attributes(status: "notsent") unless lead.status
     end
   end
 
