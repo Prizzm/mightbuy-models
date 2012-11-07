@@ -8,8 +8,6 @@ class CustomerLead < ActiveRecord::Base
   validates :status, inclusion: { in: STATUSES }
   image_accessor :photo
 
-  before_validation  :normailze_status
-
   def send_notifications
     LeadsMailer.invite_customer(self).deliver
   end
@@ -21,17 +19,5 @@ class CustomerLead < ActiveRecord::Base
     when "accepted"; 'Accepted'
     else status
     end
-  end
-
-  def normailze_status
-    db_status =
-      case self.status
-      when 'Not Sent';  "notsent"
-      when 'Sent';      "sent"
-      when 'Accepted';  "accepted"
-      else self.status
-      end
-
-    self.status = db_status
   end
 end
