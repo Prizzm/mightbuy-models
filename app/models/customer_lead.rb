@@ -8,9 +8,6 @@ class CustomerLead < ActiveRecord::Base
   validates :status, inclusion: { in: STATUSES }
   image_accessor :photo
 
-  def send_notifications
-    LeadsMailer.invite_customer(self).deliver
-  end
 
   def humanized_status
     case status
@@ -22,7 +19,7 @@ class CustomerLead < ActiveRecord::Base
   end
 
   def create_topic_customer
-    lead_invite = LeadInvite.new()
+    lead_invite = LeadInvite.new(self)
     transaction do
       user = User.create!(user_params)
       topic = Topic.new(topic_params)

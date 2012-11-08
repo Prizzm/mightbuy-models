@@ -2,6 +2,7 @@
 
 FactoryGirl.define do
   factory :product do
+    name "Flipkart books"
     url "http://www.flipkart.com"
   end
 end
