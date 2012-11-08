@@ -21,7 +21,7 @@ class CustomerLead < ActiveRecord::Base
   def create_topic_customer
     lead_invite = LeadInvite.new(self)
     transaction do
-      user = User.create!(user_params)
+      user = create_user
       topic = Topic.new(topic_params)
       topic.user = user
       topic.save!
@@ -31,10 +31,21 @@ class CustomerLead < ActiveRecord::Base
     lead_invite.add_error(e.message)
   end
 
+  def create_user
+    user = User.find_by_email(user_params[:email])
+    if user
+      user.update_attributes!(invite_token: nil)
+      user
+    else
+      User.create!(user_params)
+    end
+  end
+
   private
   def user_params
+    return @user_params if @user_params
     password = SecureRandom.hex(4)
-    {
+    @user_params = {
       email: email, name: name,
       password: password, password_confirmation: password,
       invite_token: SecureRandom.uuid

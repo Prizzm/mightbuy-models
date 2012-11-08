@@ -24,7 +24,7 @@ class User < ActiveRecord::Base
     :url, :description, :facebook, :twitter, :phone,
     :email_address, :category, :image_url, :inherit_upload_id, :authentication_token, :facebook_uid, :twitter_uid, :last_seen
 
-  attr_accessible :invite_token
+  attr_accessible :invite_token, :newly_invited
 
 
   # Relationships
