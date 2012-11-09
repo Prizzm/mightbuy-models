@@ -189,6 +189,11 @@ class User < ActiveRecord::Base
     end
   end
 
+  def update_password_with_validations(password, password_confirmation)
+    return false if password.blank? || password_confirmation.blank?
+    reset_password!(password, password_confirmation)
+  end
+
   def popular_tags
     tags.popular.limit(15)
   end
