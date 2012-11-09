@@ -25,6 +25,19 @@ class CustomerLead < ActiveRecord::Base
     end
   end
 
+  # http://railscasts.com/episodes/362-exporting-csv-and-excel
+  # first add column headers
+  # then for each lead, extract those values.
+  def self.to_csv
+    CSV.generate do |csv|
+      csv << ["Id", "Registered On", "Name", "Email", "Product", "Status"]
+      all.each do |lead|
+        csv << [ lead.id, lead.created_at, lead.name, lead.email,
+                 lead.product.try(:name), lead.humanized_status ]
+      end
+    end
+  end
+
   def humanized_status
     case status
     when "notsent";  'Not Sent'
