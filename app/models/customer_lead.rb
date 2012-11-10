@@ -73,9 +73,15 @@ class CustomerLead < ActiveRecord::Base
     return @user_params if @user_params
     password = SecureRandom.hex(4)
     @user_params = {
-      email: email, name: name,
+      email: email, name: generated_username,
       password: password, password_confirmation: password
     }
+  end
+
+  def generated_username
+    return name if name.present?
+
+    email.gsub(/\@.+/,'')
   end
 
   def topic_params
