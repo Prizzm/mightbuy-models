@@ -5,6 +5,7 @@ FactoryGirl.define do
     email { FactoryGirl.generate(:lead_email) }
     name "Almighty Customer"
     phone_number "+919845643"
+    message "dark and dusty roads."
     after_build {|cl|
       business = cl.business || FactoryGirl.create(:business)
       cl.business = business
