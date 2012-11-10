@@ -3,8 +3,8 @@ class Product < ActiveRecord::Base
   # has_many :businesses, :through => :business_products
   belongs_to :business
   has_many :orders
-  
-  has_many :bargins
+
+  has_one  :bargin
   has_many :topics
   has_many :anti_forge_tokens
   after_create :find_topics

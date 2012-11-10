@@ -126,7 +126,7 @@ class Topic < ActiveRecord::Base
   end
 
   def has_bargin?
-    product && !product.bargins.blank?
+    product && product.bargin
   end
 
   def find_product
