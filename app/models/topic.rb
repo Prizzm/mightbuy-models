@@ -7,7 +7,6 @@ class Topic < ActiveRecord::Base
   include Topic::FormEndPoints
   include Topic::Have
   include Topic::Trends
-
   # Options
   Access = {
     "Anyone." => "public",
@@ -289,6 +288,14 @@ class Topic < ActiveRecord::Base
     else
       nil
     end
+  end
+
+  def business
+    direct_business = product.try(:business)
+    return direct_business if direct_business
+
+    business_url = BusinessUrl.where(fqdn: product.domain_name).first
+    business_url.try(:business)
   end
 
   def ordered_comments
