@@ -1,4 +1,4 @@
-class SetDefaultValuesToNoInLeadConfigs < ActiveRecord::Migration
+class SetDefaultAskforemergencyphonenumberno < ActiveRecord::Migration
   def up
     change_column_default :lead_configs, :ask_for_emergency_number,      false
   end
