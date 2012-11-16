@@ -303,4 +303,23 @@ class Topic < ActiveRecord::Base
       where(parent_id: nil).order("comments.created_at ASC").
       includes(:user)
   end
+  
+  def normalized_photo
+    orientation =
+      begin
+        img = MiniMagick::Image.new(image.path)
+        img["EXIF:orientation"]
+      rescue Exception => e
+        p e
+        1
+      end
+
+    case orientation.to_s
+    when "8"; image.process(:rotate, -90).encode(:png)
+    when "3"; image.process(:rotate, 180).encode(:png)
+    when "6"; image.process(:rotate,  90).encode(:png)
+    else;     image.encode(:png)
+    end
+  end
+  
 end
