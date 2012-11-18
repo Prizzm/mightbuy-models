@@ -47,6 +47,24 @@ class CustomerLead < ActiveRecord::Base
     end
   end
 
+  def normalized_photo
+    orientation =
+      begin
+        img = MiniMagick::Image.new(photo.path)
+        img["EXIF:orientation"]
+      rescue Exception => e
+        p e
+        1
+      end
+
+    case orientation.to_s
+    when "8"; photo.process(:rotate, -90).encode(:png)
+    when "3"; photo.process(:rotate, 180).encode(:png)
+    when "6"; photo.process(:rotate,  90).encode(:png)
+    else;     photo.encode(:png)
+    end
+  end
+
   # http://railscasts.com/episodes/362-exporting-csv-and-excel
   # first add column headers
   # then for each lead, extract those values.
