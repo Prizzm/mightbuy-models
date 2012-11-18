@@ -9,7 +9,29 @@ class CustomerLead < ActiveRecord::Base
 
   validates :business, :email, :status, presence: true
   validates :status, inclusion: { in: STATUSES }
-  image_accessor :photo
+  image_accessor :photo do
+      after_assign :resize_image
+  end
+
+  def resize_image
+    orientation =
+      begin
+        img = MiniMagick::Image.new(photo.path)
+        img["EXIF:orientation"]
+      rescue Exception => e
+        p e
+        1
+      end
+
+    case orientation.to_s
+    when "8"; photo.process!(:rotate, -90).encode(:png)
+    when "3"; photo.process!(:rotate, 180).encode(:png)
+    when "6"; photo.process!(:rotate,  90).encode(:png)
+    else;     photo.encode!(:png)
+    end
+    
+    photo.process!(:resize, '1000x500>')
+  end
 
   ministry_of_state("status") do
     add_initial_state :notsent
