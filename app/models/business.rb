@@ -29,6 +29,15 @@ class Business < ActiveRecord::Base
     Set.new(products.to_a + products_via_urls)
   end
 
+  def find_and_update_product(product_id)
+    product = all_products.detect { |product| product.id == product_id.to_i }
+    return nil unless product
+
+    return product if product && product.business
+    product.update_column('business_id',self.id)
+    product
+  end
+
   def customers
     business_customers = Set.new()
     all_products.each do |product|
