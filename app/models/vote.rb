@@ -31,6 +31,7 @@ class Vote < ActiveRecord::Base
 
   def activity_line(timeline_event)
     actor,topic = timeline_event.actor, timeline_event.secondary_subject
+    return nil if(!actor || !topic)
 
     owner_link =
       if topic.user
