@@ -11,10 +11,30 @@ class Business < ActiveRecord::Base
   accepts_nested_attributes_for :business_urls, :reject_if => proc { |attributes| attributes['domain'].blank? }
   after_create   :create_lead_config
 
+  def timeline_events
+    # Get all product ids
+    products = Product.all.map(&:id)
+    topics = Topic.find(:all, conditions: {
+      product_id: products
+    }).map(&:id)
+
+    primary_events = TimelineEvent.find(:all, conditions: {
+      subject_type: 'Topic',
+      subject_id: topics
+    }, order: 'updated_at DESC')
+
+    secondary_events = TimelineEvent.find(:all, conditions: {
+      secondary_subject_type: 'Topic',
+      secondary_subject_id: topics
+    }, order: 'updated_at DESC')
+
+    return primary_events.concat(secondary_events)
+  end
+
   def foreground_color
     self.foreground.split(',')
   end
-  
+
   def background_color
     self.background.split(',')
   end
