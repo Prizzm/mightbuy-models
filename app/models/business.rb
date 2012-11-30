@@ -13,7 +13,7 @@ class Business < ActiveRecord::Base
 
   def timeline_events
     # Get all product ids
-    products = Product.all.map(&:id)
+    products = self.products.map(&:id)
     topics = Topic.find(:all, conditions: {
       product_id: products
     }).map(&:id)
