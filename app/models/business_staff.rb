@@ -7,7 +7,7 @@ class BusinessStaff < ActiveRecord::Base
          :token_authenticatable)
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :email, :password, :password_confirmation, :remember_me, :business, :name
+  attr_accessible :email, :password, :password_confirmation, :remember_me, :business, :name, :email_signature
   # attr_accessible :title, :body
   belongs_to :business
 end
