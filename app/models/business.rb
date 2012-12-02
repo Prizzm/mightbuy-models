@@ -1,15 +1,15 @@
 class Business < ActiveRecord::Base
   has_many :products
 
+  has_one  :business_config
   has_many :business_staffs
   has_many :business_urls
   has_many :customer_leads
-  has_one  :lead_config
 
   image_accessor :logo
 
   accepts_nested_attributes_for :business_urls, :reject_if => proc { |attributes| attributes['domain'].blank? }
-  after_create   :create_lead_config
+  after_create   :create_business_config
 
   def timeline_events
     # Get all product ids
