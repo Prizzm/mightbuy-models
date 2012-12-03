@@ -128,6 +128,29 @@ class Topic < ActiveRecord::Base
     product && product.bargin
   end
 
+  def bargin_valid?
+    return unless has_bargin?
+
+    product    = self.product
+    conditions = self.product.bargin.bargin_conditions
+
+    correct = 0
+    conditions.each do |condition|
+      case condition.object
+      when 'Comment'
+        if comments.length.send(condition.operator, condition.operand)
+          correct = correct + 1
+        end
+      when 'Vote'
+        if votes.length.send(condition.operator, condition.operand)
+          correct = correct + 1
+        end
+      end
+    end
+
+    correct.eql?(conditions.length)
+  end
+
   def find_product
     p = Product.find_by_url(url)
     if p then
@@ -303,7 +326,7 @@ class Topic < ActiveRecord::Base
       where(parent_id: nil).order("comments.created_at ASC").
       includes(:user)
   end
-  
+
   def normalized_photo
     orientation =
       begin
@@ -321,5 +344,5 @@ class Topic < ActiveRecord::Base
     else;     image.encode(:png)
     end
   end
-  
+
 end
