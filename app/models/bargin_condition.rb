@@ -6,14 +6,14 @@ class BarginCondition < ActiveRecord::Base
     "Vote"
   ]
 
-  OPERATORS = [
-    '>',
-    '<',
-    '>=',
-    '<=',
-    '=',
-    '!='
-  ]
+  OPERATORS = {
+    '>' => 'more than',
+    '<' => 'less than',
+    '>=' => 'more than or equal to',
+    '<=' => 'less than or equal to',
+    '==' => 'is equal to',
+    '!=' => 'is not equal to'
+  }
 
   attr_accessible :object,
                   :operator,
