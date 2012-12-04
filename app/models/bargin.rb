@@ -22,4 +22,24 @@ class Bargin < ActiveRecord::Base
 
 
   accepts_nested_attributes_for :bargin_conditions
+
+
+  def humanize
+    conditions = self.bargin_conditions.where('operand != ?', 0)
+
+    if conditions.length.eql?(0)
+      return
+    end
+
+
+    string = ''
+    conditions.each do |condition|
+      next if condition.operand.eql?(0)
+
+      string += BarginCondition::OPERATORS[condition.operator]
+      string += " #{condition.operand} of your friends #{condition.object.downcase} and"
+    end
+
+    string.gsub(/ and$/, '')
+  end
 end
