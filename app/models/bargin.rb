@@ -14,7 +14,8 @@ class Bargin < ActiveRecord::Base
                   :type,
                   :accept_payments,
                   :payment_type,
-                  :discount
+                  :discount,
+                  :public
 
   attr_accessible :bargin_conditions_attributes
 
