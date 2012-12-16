@@ -17,6 +17,7 @@ class CustomerLead < ActiveRecord::Base
 
   before_validation :rename_topics
   after_save :find_or_create_user
+  after_save :associate_topics
 
   def rename_topics
     return if self.topics.length == 0
@@ -28,14 +29,20 @@ class CustomerLead < ActiveRecord::Base
         topic.subject = self.product.name
         topic.url     = self.product.url
       else
-        if self.business and self.business.business_urls.length > 0
-          topic.subject = self.business.business_urls.first.domain
-        else
-          topic.subject = 'Test'
-        end
+        topic.subject = self.business.business_urls.first.domain
       end
     end
   end
+
+  def associate_topics
+    return if self.topics.length == 0
+
+    self.topics.each do |topic|
+      topic.user = self.user
+      topic.save
+    end
+  end
+
 
   def resize_image
     orientation =
@@ -99,16 +106,17 @@ class CustomerLead < ActiveRecord::Base
   end
 
   def find_or_create_user
-    # TODO: Attach topic to user
-    old_user = self.user || User.find_by_email(user_params[:email])
-    return old_user if old_user
-    user = User.create!(user_params)
-    update_attributes!(
-      user_id: user.id,
-      invite_token: SecureRandom.uuid
-    )
-    user
+    self.user = self.user || User.find_by_email(user_params[:email])
+
+    if not self.user
+      self.user = User.create!(user_params)
+      self.invite_token = SecureRandom.uuid
+      self.save
+    end
+
+    self.user
   end
+
 
   private
   def user_params
