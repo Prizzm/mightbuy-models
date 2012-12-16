@@ -6,7 +6,9 @@ class CustomerLead < ActiveRecord::Base
   has_many :customer_lead_topics
   has_many :topics, through: :customer_lead_topics
 
-  accepts_nested_attributes_for :topics
+  accepts_nested_attributes_for :topics, :reject_if => proc { |attributes|
+    attributes['image'].nil? or attributes['image'].blank?
+  }
 
   include MinistryOfState
 
