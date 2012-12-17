@@ -1,4 +1,6 @@
 class Topic < ActiveRecord::Base
+  has_many :customer_lead_topics
+  has_one :customer_lead, through: :customer_lead_topics
 
   # Includes
   include InheritUpload
@@ -42,7 +44,7 @@ class Topic < ActiveRecord::Base
   scope :mightbuy, where(status: "imightbuy")
 
   # Validations
-  validates :access, :presence => { :message => "Please select one of the above :)" }
+  validates :access, :presence => { :message => "Please select one of the above" }
   validates :shortcode, :presence => true, :uniqueness => true
   validates :subject, :presence => true
   validates :status, presence: true, inclusion: { in: STATUSES }
