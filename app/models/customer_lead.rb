@@ -86,10 +86,10 @@ class CustomerLead < ActiveRecord::Base
   # then for each lead, extract those values.
   def self.to_csv
     CSV.generate do |csv|
-      csv << ["Id", "Registered On", "Name", "Email", "Product", "Status"]
+      csv << ["Id", "Registered On", "Name", "Email", "Product", "Status", "Join Mailing List"]
       all.each do |lead|
         csv << [ lead.id, lead.created_at, lead.name, lead.email,
-                 lead.product.try(:name), lead.humanized_status ]
+                 lead.product.try(:name), lead.humanized_status, lead.humanized_join_list ]
       end
     end
   end
@@ -100,6 +100,13 @@ class CustomerLead < ActiveRecord::Base
     when "sent";     'Sent'
     when "accepted"; 'Accepted'
     else status
+    end
+  end
+
+  def humanized_join_list
+    case join_list
+      when true;  'Yes'
+      when false; 'No'
     end
   end
 
