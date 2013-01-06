@@ -7,6 +7,7 @@ class Bargin < ActiveRecord::Base
                   :offer,
                   :type,
                   :description,
+                  :other,
                   :url,
                   :value,
                   :bargin_type,
