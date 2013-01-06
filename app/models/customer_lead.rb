@@ -22,6 +22,7 @@ class CustomerLead < ActiveRecord::Base
 
   validates :business, :email, :status, presence: true
   validates :status, inclusion: { in: STATUSES }
+  validate :presence_of_topic, on: :create
 
   before_validation :rename_topics
   after_save :find_or_create_user
@@ -47,6 +48,9 @@ class CustomerLead < ActiveRecord::Base
     return if self.topics.length == 0
 
     self.topics.each do |topic|
+      topic.product.business = self.business
+      topic.product.save
+
       topic.user = self.user
       topic.save
     end
@@ -151,4 +155,12 @@ class CustomerLead < ActiveRecord::Base
 
     email.gsub(/\@.+/,'')
   end
+
+
+  protected
+    def presence_of_topic
+      if self.topics.length == 0 or self.topics.all?{ |topic| topic.marked_for_destruction? }
+        self.errors[:base] << 'A customer lead must have at least one image.'
+      end
+    end
 end
