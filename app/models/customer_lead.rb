@@ -1,13 +1,19 @@
 class CustomerLead < ActiveRecord::Base
   belongs_to :business
-  belongs_to :product
   belongs_to :user
 
   has_many :customer_lead_topics
-  has_many :topics, through: :customer_lead_topics
+  has_many :topics, through: :customer_lead_topics, dependent: :destroy
+  has_many :product, through: :topics
 
   accepts_nested_attributes_for :topics, :reject_if => proc { |attributes|
-    attributes['image'].nil? or attributes['image'].blank?
+    if not attributes['id'].nil? and not attributes['id'].blank?
+      false
+    elsif not attributes['image'].nil? and not attributes['image'].blank?
+      false
+    else
+      true
+    end
   }
 
   include MinistryOfState
@@ -16,6 +22,7 @@ class CustomerLead < ActiveRecord::Base
 
   validates :business, :email, :status, presence: true
   validates :status, inclusion: { in: STATUSES }
+  validate :presence_of_topic, on: :create
 
   before_validation :rename_topics
   after_save :find_or_create_user
@@ -27,11 +34,12 @@ class CustomerLead < ActiveRecord::Base
     self.topics.each do |topic|
       next if not topic.new_record?
 
-      if self.product
-        topic.subject = self.product.name
-        topic.url     = self.product.url
+      if topic.product
+        topic.subject = topic.product.name
+        topic.url     = topic.product.url
       else
         topic.subject = self.business.business_urls.first.domain
+        topic.url     = self.business.business_urls.first.domain
       end
     end
   end
@@ -40,6 +48,9 @@ class CustomerLead < ActiveRecord::Base
     return if self.topics.length == 0
 
     self.topics.each do |topic|
+      topic.product.business = self.business
+      topic.product.save
+
       topic.user = self.user
       topic.save
     end
@@ -144,4 +155,12 @@ class CustomerLead < ActiveRecord::Base
 
     email.gsub(/\@.+/,'')
   end
+
+
+  protected
+    def presence_of_topic
+      if self.topics.length == 0 or self.topics.all?{ |topic| topic.marked_for_destruction? }
+        self.errors[:base] << 'A customer lead must have at least one image.'
+      end
+    end
 end
