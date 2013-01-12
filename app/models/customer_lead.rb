@@ -22,7 +22,7 @@ class CustomerLead < ActiveRecord::Base
 
   validates :business, :email, :status, presence: true
   validates :status, inclusion: { in: STATUSES }
-  validate :presence_of_topic, on: :create
+  #validate :presence_of_topic, on: :create
 
   before_validation :rename_topics
   after_save :find_or_create_user
